@@ -1,0 +1,29 @@
+apiVersion: v2
+name: nr-ue
+description: A Helm chart for nr-ue network function
+
+type: application
+
+icon: http://www.openran.org/uploads/2015/06/final_logo.png
+
+version: 0.1.1
+
+appVersion: develop
+
+keywords:
+  - RF Simulator
+  - NR-UE
+  - RAN
+  - 5G
+
+sources:
+  - https://gitlab/openran
+
+maintainers:
+  - name:  OPENRAN
+    email: contact@openran.org
+    
+    
+    
+    
+    

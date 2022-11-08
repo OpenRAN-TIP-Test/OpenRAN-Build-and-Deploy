@@ -1,0 +1,25 @@
+apiVersion: v2
+name: gnb-du
+description: A Helm chart for gnb-du network function
+
+type: application
+
+icon: http://www.openran.org/uploads/final_logo.png
+
+version: 0.1.1
+
+appVersion: develop
+
+keywords:
+  - RF Simulator
+  - gNB
+  - RAN
+  - 5G
+  - DU
+
+sources:
+  - https://gitlab/openran
+
+maintainers:
+  - name:  OPENRAN
+    email: contact@openran.org

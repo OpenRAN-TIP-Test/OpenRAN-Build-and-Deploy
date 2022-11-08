@@ -1,0 +1,25 @@
+apiVersion: v2
+name: gnb-cu
+description: A Helm chart for gnb-cu network function
+
+type: application
+
+icon: http://www.openran/uploads/2015/06/final_logo.png
+
+version: 0.1.1
+
+appVersion: develop
+
+keywords:
+  - RF Simulator
+  - gNB
+  - RAN
+  - 5G
+  - CU
+
+sources:
+  - https://gitlab/openRAN/gnb-cu
+
+maintainers:
+  - name:  OPENRAN
+    email: contact@openran.org

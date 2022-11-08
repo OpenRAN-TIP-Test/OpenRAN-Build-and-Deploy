@@ -1,0 +1,41 @@
+nfimage:   # image name either locally present or in a public/private repository
+  registry: local
+  repository: docker.io/openRAN/gnb           ## dockerhub 
+  version: develop 
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  s1uPort: 2152
+  s1cPort: 36412
+  x2cPort: 36422
+  f1Port: 2153
+
+config:
+  timeZone: "Europe/Paris"
+  rfSimulator: "server" 
+  gnbduName: "du-rfsim"
+  usesatddcu: "yes"
+  mcc: "208"  
+  mnc: "99"    
+  mncLength: "2" 
+  tac: "1"    
+  amfIpAddress: "127.0.0.1"  
+  gnbNgaIfName: "eth0"          
+  gnbNgaIpAddress: "status.podIP" 
+  gnbNguIfName: "eth0"   
+  gnbNguIpAddress: "status.podIP" 
+  f1IfName: "eth0"               
+  f1cuIpAddress: "172.17.0.8"   
+  f1duIpAddress: "status.podIP"
+  f1cuPort: "2153"
+  f1duPort: "2153"
+
+resources:
+  define: false
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+   cpu: 100m
+   memory: 256Mi
