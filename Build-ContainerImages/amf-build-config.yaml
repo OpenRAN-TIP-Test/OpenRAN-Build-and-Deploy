@@ -1,0 +1,36 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+   name: amf
+spec:
+  lookupPolicy:
+    local: true
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: "amf"
+spec:
+    runPolicy: "Serial"
+    source:
+        git:
+            uri: "https://gitlab/openRAN/amf.git"
+            ref: "v1.4.0"
+        secrets:
+          - secret:
+              name: etc-pki-entitlement
+            destinationDir: etc-pki-entitlement
+        configMaps:
+          - configMap:
+              name: rhsm-conf
+            destinationDir: rhsm-conf
+          - configMap:
+              name: rhsm-ca
+            destinationDir: rhsm-ca
+    strategy:
+        dockerStrategy:
+            dockerfilePath: "docker/Dockerfile.amf"
+    output:
+        to:
+            kind: "ImageStreamTag"
+            name: "amf:v1.4.0"

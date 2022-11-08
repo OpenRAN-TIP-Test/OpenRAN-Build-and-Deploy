@@ -1,0 +1,41 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+   name: nr-ue
+spec:
+  lookupPolicy:
+    local: true
+--- 
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata: 
+  name: nr-ue
+spec: 
+  output: 
+    to: 
+      kind: ImageStreamTag
+      name: "nr-ue:develop"
+  runPolicy: Serial
+  strategy:
+    type: Docker
+  source: 
+    dockerfile: |
+        FROM image-registry.openshift-image-registry.svc:5000/ran-build:develop AS nr-ue-build
+
+        # Now we are copying from builder-image the UHD files.
+        COPY --from=nr-ue-base /usr/local/bin/uhd_find_devices /usr/local/bin
+        COPY --from=nr-ue-base /usr/local/lib64/uhd/utils/uhd_images_downloader.py /opt/nr-ue/bin
+
+        WORKDIR /usr/local/share/uhd/rfnoc
+        COPY --from=nr-ue-base /usr/local/share/uhd/rfnoc/ .
+
+        RUN /bin/bash -c "ln -s /usr/local/lib/lib_usrpdevif.so /usr/local/lib/lib_device.so" && \
+            ldconfig
+
+        # Copy the relevant configuration files for eNB
+        WORKDIR /opt/nr-ue/etc
+        COPY --from=nr-ue-build /ran/ci-scripts/conf_files/ue.* .
+
+        WORKDIR /opt/nr-ue
+        CMD ["/opt/nr-ue/bin/nr-uesoftmodem.Rel15", "-O", "/opt/nr-ue/etc/nr-ue.conf"]
+        ENTRYPOINT ["/opt/nr-ue/bin/entrypoint.sh"]

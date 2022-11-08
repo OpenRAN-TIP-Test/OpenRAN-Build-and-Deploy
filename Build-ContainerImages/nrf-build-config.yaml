@@ -1,0 +1,36 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+   name: nrf
+spec:
+  lookupPolicy:
+    local: true
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: nrf
+spec:
+    runPolicy: "Serial"
+    source:
+        git:
+            uri: "https://gitlab/openRAN/nrf.git"
+            ref: "v1.4.0"
+        secrets:
+          - secret:
+              name: etc-pki-entitlement
+            destinationDir: etc-pki-entitlement
+        configMaps:
+          - configMap:
+              name: rhsm-conf
+            destinationDir: rhsm-conf
+          - configMap:
+              name: rhsm-ca
+            destinationDir: rhsm-ca
+    strategy:
+        dockerStrategy:
+            dockerfilePath: "docker/Dockerfile.nrf"
+    output:
+        to:
+            kind: "ImageStreamTag"
+            name: "nrf:v1.4.0"
