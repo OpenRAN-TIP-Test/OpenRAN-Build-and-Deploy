@@ -1,0 +1,23 @@
+- hosts: localhost
+  
+  tasks:
+  - name: Login
+    include_tasks: ../login.yml
+
+  - name: Create gNB config map
+    kubernetes.core.k8s:
+        api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
+        state: present
+        definition: "{{ lookup('template', '../..//templates/config/gnb.yaml') | from_yaml }}"
+  
+  - name: Deploy gNB
+    kubernetes.core.k8s:
+        api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
+        state: present
+        definition: "{{ lookup('template', '../..//templates/deployment/gnb.yaml') | from_yaml }}"
+
+  - name: Create gNB service
+    kubernetes.core.k8s:
+        api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
+        state: present
+        definition: "{{ lookup('template', '../../templates/service/gnb.yaml') | from_yaml }}"

@@ -1,0 +1,23 @@
+- hosts: localhost
+  
+  tasks:
+  - name: Login
+    include_tasks: ../login.yml
+
+  - name: Create 5G-Core config map
+    kubernetes.core.k8s:
+        api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
+        state: present
+        definition: "{{ lookup('template', '../..//templates/config/5G-Core.yaml') | from_yaml }}"
+  
+  - name: Deploy 5G-Core
+    kubernetes.core.k8s:
+        api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
+        state: present
+        definition: "{{ lookup('template', '../..//templates/deployment/5G-Core.yaml') | from_yaml }}"
+
+  - name: Create 5G-Core service
+    kubernetes.core.k8s:
+        api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
+        state: present
+        definition: "{{ lookup('template', '../../templates/service/5G-Core.yaml') | from_yaml }}"
